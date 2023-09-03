@@ -115,6 +115,7 @@
 # print(True*5, 1*5) # булевые
 # print(False*5, 0*5)
 
+
 # булевые значения можно суммировать если они суммируются в integer object
 #         1     1      0      1     0
 # array = [True, True, False, True, False]
