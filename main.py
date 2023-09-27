@@ -861,6 +861,8 @@ import math
 # print(d2) # -> {'name': 'Ivan', 'lang': 'ru'}
 
 
+
+
 # #Вызов по ключу
 # d = {"a": 5}
 # print(d["a"]) # -> 5
@@ -891,6 +893,9 @@ import math
 # сравнить только ключи
 # print(d1.keys() == d2.keys(), d1.keys() == d3.keys())
 
+#узнаем ключ по значению
+# d = {"a": 12, "b": 33, "c": 123, "d": 1}
+# print(list(d.keys())[list(d.values()).index(12)])
 
 #########################################
 # Методы для работы со словарями (dict) #
@@ -1472,6 +1477,175 @@ s = 'Привет мир! Как дела народ?'
 #############
 # Замыкания #
 #############
+
+# Замыкание функции это когда в неё передаётся значение и запоминается в ней для последующего вызова, затем возвращается функция обёртка
+# def adder(first_value):
+#
+#     def inner(second_value):
+#         return first_value + second_value
+#
+#     return inner
+#
+# # # сначала вызываем функцию 'def adder' она запоминает значение аргумента 'first_value'
+# # # далее возвращаем функцию 'def inner' которая помещается в переменную 'f1' для последующего вызова
+# f1 = adder(2)
+# # # затем вызываем функцию 'def inner' содержащуюся в переменной 'f1' и передаём в неё значение 'second_value'
+# # # далее 'first_value' складывается с 'second_value' и возвращается на распечатку
+# print(f1(4))
+
+##############
+# Декораторы #
+##############
+
+from functools import wraps
+
+# # декоратор это функция которая позволяет обернуть другую функцию в свой код при этом не трогая оригинальный код
+# def decorator(func_name):
+#     # декоратор @wraps нужен для того что бы __name__ и __doc__ отображали информацию о родительской функции а не об обёртке
+#     @wraps(func_name)
+#     def wrapper():
+#         """Документация тестовой функции wrapper"""
+#         print('Выполнился код декоратора перед вызовом родительской функции make()') # выполняем код декоратора
+#         print('Аргумент func_name ==', func_name) # переданный аргумент представляет собой имя функции
+#         func_name() # выполненяем функцию make()
+#         print('Выполнился код декоратора после вызова родительской функции make()') # продолжаем выполнение кода декоратора
+#     return wrapper # возвращаем имя обёртки. make = wrapper()
+#
+# # # как аргумент в функцию decorator передаётся имя функции make
+# @decorator # make = decorator(make)
+# def make():
+#     """Документация тестовой функции make"""
+#     print('Выполнился код внутри функции make()')
+# print('Запускаем функцию make() под декоратором @decorator')
+# make()
+# print('Код выполнен.')
+#
+# print('\nИмя функции:', make.__name__)
+# print('Документация функции:', make.__doc__)
+
+# Можно записать декоратор с пробросом дополнительных аргументов, выглядеть это будет так,
+# просто добавляется ещё один внешний декоратор с помощью которого и декорируется необходимая
+# функция, аргументы передеанные в этот внешний декоратор при обёртывании и попадут в _args, _kwargs
+# def outer_decor(*_args, **_kwargs):
+#     def decorator(func):
+#         def wrapper(*args, **kwargs):
+#             print('аргументы переданные в outer_decor при обёртывании:', _args, _kwargs)
+#             print('аргументы переданные в функцию function:', args, kwargs)
+#             func(*args, **kwargs)
+#             print(func(*args, **kwargs))
+#         return wrapper
+#     return decorator
+#
+# @outer_decor(1, 2, a=3, b=4)
+# def function(text, num, key_word_key):
+#     print(text, num, key_word_key)
+#     return text, num, key_word_key
+# function('abc', 777, key_word_key='key_word_value')
+
+
+# тот же самый декоратор но без синтаксического сахара:
+# def function(text, num, key_word_key):
+#     pass
+# function_outer_decor = outer_decor(1, 2, a=3, b=4)(function)
+# function_outer_decor('abc', 777, key_word_key='key_word_value')
+# можно даже записать в одну строку:
+# outer_decor(1, 2, a=3, b=4)(function)('abc', 777, key_word_key='key_word_value')
+
+
+#декоратор на высчитывание времени выполнения функции
+# from datetime import datetime
+
+# def decor(func):
+#
+#     def wrapper():
+#         x = datetime.now()
+#         func()
+#         y = datetime.now()
+#         print(y-x)
+#
+#     return wrapper
+#
+# @decor
+# def qwe():
+#     a = list(range(1000))
+#     for i in a:
+#         print(i+i)
+#
+# qwe()
+
+
+# Декоратор который кэширует результат вычислений функции func_name
+# и в случае повторного запроса с такими же входными данными
+# не будет заного считать а вернёт кэшированный результат.
+
+# cache = {}
+#
+# def decor_func(func):
+#
+#     def wrapper(*args, **kwargs):
+#
+#         if args in cache:
+#             #print(f'return cache | {args=}')
+#             return cache[args]
+#
+#         result = func(*args)
+#
+#         cache[args] = result
+#         # cache.update({args:result}) # способ добавления пары в словарь с помощью метода update
+#
+#         #print(f'create cache | {args=}')
+#
+#         return result
+#
+#     return wrapper
+#
+#
+# @decor_func
+# def func(x):
+#     print("Wait im calculating")
+#     return x*x + 1
+#
+#
+# print('return:', func(4), '  cache:', cache)
+# print('return:', func(4), '  cache:', cache)
+# print('return:', func(4), '  cache:', cache)
+# print('return:', func(6), '  cache:', cache)
+# print('return:', func(6), '  cache:', cache)
+
+
+################################################################
+# Генераторы списков, словарей, множеств и Выражение генератор #
+################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
