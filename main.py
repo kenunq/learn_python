@@ -1876,39 +1876,146 @@ lst = [9, 8, 7, 4, 5, 6, 3, 2, 1, 5, 5]
 # ]
 
 # Создание матрицы с тремя столбцами по два элемента каждый
-N = 3
-M = 2
-A = []
-for i in range(N):
-    A.append([0]*M)
-print(A)
+# N = 3
+# M = 2
+# A = []
+# for i in range(N):
+#     A.append([0]*M)
+# print(A)
+#
+# # Заполнение матрицы
+# for i in range(N):
+#     for j in range(M):
+#         A[i][j] = 6
+#
+# # Вывод матрицы по индексам на экран для удобства восприятия
+# for i in range(len(A)):        # возвращает количество строк в матрице
+#     for j in range(len(A[i])): # возвращает количество элементов в строке
+#         print(A[i][j], end=' ')
+#     print()                    # делаем переход на новую строку
+#
+#
+#
+# #Вывод матрицы по значениям списка на экран для удобства восприятия
+# for row in A:               # делаем перебор всех строк матрицы
+#     for elem in row:        # перебираем все элементы в строке
+#         print(elem, end=' ')
+#     print()                 # делаем переход на новую строку
+#
+# # Вывод матрицы по значениям списка на экран для удобства восприятия
+# for row in A:
+#     print(' '.join(list(map(str, row))))
 
-# Заполнение матрицы
-for i in range(N):
-    for j in range(M):
-        A[i][j] = 6
-
-# Вывод матрицы по индексам на экран для удобства восприятия
-for i in range(len(A)):        # возвращает количество строк в матрице
-    for j in range(len(A[i])): # возвращает количество элементов в строке
-        print(A[i][j], end=' ')
-    print()                    # делаем переход на новую строку
-
-
-
-#Вывод матрицы по значениям списка на экран для удобства восприятия
-for row in A:               # делаем перебор всех строк матрицы
-    for elem in row:        # перебираем все элементы в строке
-        print(elem, end=' ')
-    print()                 # делаем переход на новую строку
-
-# Вывод матрицы по значениям списка на экран для удобства восприятия
-for row in A:
-    print(' '.join(list(map(str, row))))
+# встроенный модуль copy позволяет создавать копии: словарей, множеств, списков, пользовательских классов (мб что-то ещё)
+# import copy
+# test_1 = [1, 2, 3, [1, 2, 3]]
+# test_copy = copy.copy(test_1)
+# print(test_1, test_copy)
+# # [1, 2, 3, [1, 2, 3]] [1, 2, 3, [1, 2, 3]]
+#
+# # при добавление элементов в копию во вложенный список, элементы добавятся и в родительский
+# test_copy[3].append(4)
+# print(test_1, test_copy)
+# # [1, 2, 3, [1, 2, 3, 4]] [1, 2, 3, [1, 2, 3, 4]]
+#
+# # решение - использовать deepcopy
+# test_1 = [1, 2, 3, [1, 2, 3]]
+# test_deepcopy = copy.deepcopy(test_1)
+# test_deepcopy[3].append(4)
+# print(test_1, test_deepcopy)
+# # [1, 2, 3, [1, 2, 3]] [1, 2, 3, [1, 2, 3, 4]]
 
 
+# for num in range(39):
+#     summ = 0
+#     summ2 = 0
+#
+#     for n in str(num):
+#         summ += int(n)
+#
+#     for n in str(summ):
+#         summ2 += int(n)
+#
+#     if summ2 == 2:
+#         print(num, summ2)
+
+# Подмена строки по полу человека
+# gender = {
+#     'male':'Дорогой',
+#     'female':'Дорогая'
+# }
+#
+# data = [
+#     ['Семён', 'Семёнович', 32.56, 'male'],
+#     ['Тамара', 'Ивановна', 13.12, 'female'],
+#     ['Михаил', 'Анатольевич', 238.12, 'male']
+# ]
+#
+# for name, mid_name, balance, gen in data:
+#     text = f'{gender[gen]} {name} {mid_name}, баланс вашего лицевого счёта составляет {balance} руб.'
+#     print(text)
 
 
+# Алгоритм Евклида для нахождения НОД (наибольшего общего делителя) двух целых чисел
+# a = int(input('Введите большее число: '))
+# b = int(input('Введите меньшее число: '))
+#
+# while b > 0:
+#
+#     c = a % b
+#     a = b
+#     b = c
+#
+# print(a)
+
+
+# Нахождение всех делителей числа
+# n = int(input())
+# i = 1
+# a = []
+# while i * i <= n:
+#     if n % i == 0:
+#         a.append(i)
+#         if i != n // i:
+#             a.append(n // i)
+#     i += 1
+# a.sort()
+# print(a)
+
+
+# Треугольник Паскаля
+# n = int(input('Введите число: '))
+# triangle = []
+#
+# for i in range(n+1):
+#     triangle.append([1]+[0] * n)
+#
+# for i in range(1, n+1):
+#     for j in range(1, i+1):
+#         triangle[i][j] = triangle[i-1][j] + triangle[i-1][j-1]
+#
+# for i in range(0, n+1):
+#     for j in range(0, n+1): # i+1 # убрать нули по диагонали
+#         if triangle[i][j] < 10:
+#             print(triangle[i][j], end='  ')
+#         else:
+#             print(triangle[i][j], end=' ')
+#     print()
+
+# Рекурсия
+
+# def recursion(x):
+#     print(x)
+#     if x == 1: return
+#     return recursion(x - 1)
+# print(recursion(5))
+
+# def get_factorial(x):
+#     print('x:', x)
+#     if x == 1: return x
+#     return x * get_factorial(x - 1)
+#
+# print(get_factorial(4))
 
 
 
