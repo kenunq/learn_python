@@ -2010,6 +2010,8 @@ lst = [9, 8, 7, 4, 5, 6, 3, 2, 1, 5, 5]
 #     return recursion(x - 1)
 # print(recursion(5))
 
+#
+
 # def get_factorial(x):
 #     print('x:', x)
 #     if x == 1: return x
@@ -2018,7 +2020,127 @@ lst = [9, 8, 7, 4, 5, 6, 3, 2, 1, 5, 5]
 # print(get_factorial(4))
 
 
+# rnd_str = 'LItBeoFLcSGBOFQxMHoIuDDWcqcVgkcRoAeocXO'
+#
+# count = 0
+# new_rnd_str = ''
+# for char in rnd_str:
+#     count += 1
+#     if count <= len(rnd_str) / 2:
+#         if len(rnd_str) % 2 == 0 and count == len(rnd_str) / 2:
+#             new_rnd_str += char
+#         else:
+#             new_rnd_str += char + '('
+#     elif count == len(rnd_str):
+#         new_rnd_str += char
+#     else:
+#         new_rnd_str += char + ')'
+# print(new_rnd_str)
 
+# получить текущую дату и время
+# from datetime import datetime as dt
+# print(dt.now())
+
+# получить разницу времени между вызовами функции
+# from time import perf_counter as pc
+# print(pc())
+
+# удобный для восприятия вывод принтов, на примере словаря
+# from pprint import pprint
+# pprint(locals())
+
+# перезагрузка модуля
+# from importlib import reload
+# reload(название_модуля)
+
+# класс Counter служит для подсчёта повторений в последовательностях
+# from collections import Counter
+# s = 'abracadabra'
+# w = ['Donald', 'Mickey', 'Donald', 'Mickey', 'Mickey']
+# k = (1, 2, 3, 3, 3, 2, 4, 1, 1)
+# print(Counter(s))
+# print(Counter(w))
+# print(Counter(k))
+
+
+# класс defaultdict служит для исключения ошибки NameError при вызове несуществующего ключа
+# при данном вызове создастся ключ с запрошенным именем и значением в виде того что вы передадите в класс defaultdict
+int=0
+list=[]
+str=''
+from collections import defaultdict
+
+# dct = {}
+# dct['a'] # NameError
+
+# INT = defaultdict(int)
+# print(INT)
+# INT['s']
+# print(INT)
+#
+# LST = defaultdict(list)
+# print(LST)
+# LST['s']
+# print(LST)
+#
+# STR = defaultdict(str)
+# print(STR)
+# STR['s']
+# print(STR)
+
+# STR = defaultdict(tuple)
+# print(STR) # -> defaultdict(<class 'tuple'>, {})
+# STR['s']
+# print(STR) # -> defaultdict(<class 'tuple'>, {'s': ()})
+
+# # класс namedtuple, позволяет создавать класс с именованными значениями кортежа
+# from collections import namedtuple
+# Point = namedtuple('Point', 'x y z')
+# pnt = Point(43, 57, 24)
+# print(pnt.x, pnt.y, pnt.z)
+# print(pnt._asdict()) # представление именнованного кортежа в виде словаря
+# print(pnt._replace(y='текст')) # изменение значения атрибута
+
+# # обычный кортеж с обращением по индексам
+# point = (43, 57, 24)
+# print(point[0], point[1], point[2])
+
+
+# # ещё пример
+# Person = namedtuple('Person', 'name surname date country')
+# prsn = Person('Megan', 'Jones', '1998-07-16', 'Bolivia')
+# print(prsn.name, prsn.surname, prsn.date, prsn.country)
+# print(prsn._asdict())
+# print(prsn._replace(date='текст'))
+
+# # обычный кортеж с обращением по индексам
+# person = ('Megan', 'Jones', '1998-07-16', 'Bolivia')
+# print(person[0], person[1], person[2], person[3])
+
+
+
+# # Аннотации, на работу никак не влияют, визуально дают понять к какому типу должен принадлежать объект
+# a: int = 100
+# # стрелкой указывается тип объекта который должна вернуть функция
+# def some(a: int, b: int=40) -> int:
+#     return a + b
+# print(some(a))
+# print(some.__annotations__)
+
+# # с помощью библиотеки typing можно явно указывать какие объекты будут содержатся в итерируемом объекте
+# from typing import List, Dict, Set, Tuple, Any, Optional, Union
+# d: Dict[str, int] = {'a': 100, 'b': 200}
+# # так же для функции
+# def some2(lst: List[str]):
+#     for item in lst:
+#         print(item)
+# some2(['a', 'b', 'c'])
+# print(some2.__annotations__)
+
+# array = [-4, 2, 5, 6, 18, 19]
+# # zip завёрнутый в enumerate
+# for index, (l_num, r_num) in enumerate(zip(array, array[1:])):
+#     print(index, (l_num, r_num))
 
 
 
