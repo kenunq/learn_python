@@ -2424,3 +2424,12 @@ from collections import defaultdict
 # b = '9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
 # print(sum(map(int, (a, b))))
 # print(int(a) + int(b))
+
+
+def qwe(s):
+    for i in range(len(s)-1):
+        if s[i] != s[-i-1]:
+            return False
+    return True
+
+qwe('abracarba')
