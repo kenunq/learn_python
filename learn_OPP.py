@@ -142,38 +142,216 @@
 
 #======================================================================================================================
 
-class Car:
-    model = "BMW"
-    engine = 1.6
+# class Car:
+#     model = "BMW"
+#     engine = 1.6
+#
+#     @staticmethod
+#     def drive():
+#         print('Lets go')
+#
+#
+# car1 = Car()
+# car1.model = 'Lada'
+#
+# print(car1.__dict__) # можно посмотреть атрибуты у экземпляра класса
+# print(Car.__dict__)
+#
+# #Вызов метода у класса
+# Car.drive()
+# getattr(Car, 'drive')()
+#
+# #Вызов метода у экземпляра класса с помощью установки декоратора @staticmethod
+# car1.drive()
+# getattr(car1, "drive")()
 
-    @staticmethod
-    def drive():
-        print('Lets go')
 
+#======================================================================================================================
 
-car1 = Car()
-car1.model = 'Lada'
+# class Cat:
+#
+#     def __init__(self, name, breed, age, color):
+#         print(f"Hello new object is {self, name, breed, age, color}")
+#         self.name = name
+#         self.bred = breed
+#         self.age = age
+#         self.color = color
+#
+# cat1 = Cat("Maw", "Egypet", 3, 'gray')
 
-print(car1.__dict__) # можно посмотреть атрибуты у экземпляра класса
-print(Car.__dict__)
+#======================================================================================================================
 
-#Вызов метода у класса
-Car.drive()
-getattr(Car, 'drive')()
+#Моносостояние для всех экземпляров
 
-#Вызов метода у экземпляра класса с помощью установки декоратора @staticmethod
-car1.drive()
-getattr(car1, "drive")()
+# class Cat:
+#
+#     __shared_attr = {
+#         'breed': 'Pers',
+#         'color': 'Black'
+#     }
+#
+#     def __init__(self):
+#         # присвоив словарь с дефолтными атрибутами в self.__dict__ применяем атрибуты в словаре ко всем экземплярам класса
+#         # и даже при изменении атрибута он изменится у всех экземпляров
+#         self.__dict__ = Cat.__shared_attr
+#         self.age = 12
+#     def qwe(self):
+#         print(123)
+#
+# d = Cat()
+# b = Cat()
+#
+# b.breed = 'Egypet'
+#
+# print(d.breed, d.color)
+# print(b.breed, b.color)
+# print(b.__dict__)
+
+#======================================================================================================================
+
+#Инкапсуляция
+# Публичные, Приватные, Защищённые атрибуты и методы
+
+# Публичные - без нижних подчёркиваний в начале
+# Защищённые - с одним подчёркиванием в начале (говорит о том что атрибут не стоит использовать вне класса)
+# Приватные - с двумя подчёркиваниями в начале (запрещает использовать вне класса, ошибка - AttributeError)
+
+# class BankAccount:
+#     def __init__(self, name, balance, passport):
+#         self.name = name
+#         self.__name = name
+#         self.__balance = balance
+#         self.__passport = passport
+#
+#     def __print_data(self):
+#         print(self.__name, self.__balance, self.__passport)
+#
+# person = BankAccount('Ivan', 4231, 234154352134)
+# print(dir(person))
+# person._BankAccount__passport = 31231
+# print(person.__dict__) # -> {'name': 'Ivan', '_BankAccount__name': 'Ivan', '_BankAccount__balance': 4231, '_BankAccount__passport': 234154352134}
+# print(person._BankAccount__passport)
+
+#======================================================================================================================
+
+# class BankAccount:
+#     def __init__(self, name, balance):
+#         self.name = name
+#         self.__balance = balance
+#
+#     @property # -> превращает метод в свойство по умолчанию getter
+#     def my_balance(self):
+#         print('getter')
+#         return self.__balance
+#
+#     #методы getter, setter, deleter называются одним имененм
+#     @my_balance.setter
+#     def my_balance(self, value):
+#         print('setter')
+#         if isinstance(value, (int,float)):
+#             self.__balance = value
+#         else:
+#             raise ValueError('Значение должно быть числом')
+#
+#     @my_balance.deleter
+#     def my_balance(self):
+#         print('deleter')
+#         del self.__balance
+#
+#
+# person = BankAccount('Kiril', 140)
+# print(person.my_balance)
+# person.my_balance  = 500
+# print(person.my_balance)
+# del person.my_balance
+# # print(person.my_balance)
 
 
 #======================================================================================================================
 
 
+# class Square:
+#     def __init__(self,s):
+#         self.__side = s
+#         self.__area = None
+#
+#     @property
+#     def side(self):
+#         return self.__side
+#
+#     @side.setter
+#     def side(self, value):
+#         self.__side = value
+#         self.__area = None
+#
+#     @property
+#     def area(self):
+#         if self.__area == None:
+#             print('calculate area')
+#             self.__area = self.__side ** 2
+#         return self.__area
+#
+# b1 = Square(5)
+# print(b1.side)
+# print(b1.area)
+# b1.side = 15
+# print(b1.side)
+# print(b1.area)
 
+#======================================================================================================================
 
+# Пространство имён класса
 
+x = 1
+y = 2
+z = 3
 
+class Xyz:
+    x = 10
+    y = 20
+    z = 30
 
+    def info(self):
+        # по дефолту имена переменных ищатся в глобальном пространстве
+        # если указать self либо название класса, то поиск будет идти внутри класса
+        print('Global', x, y, z)
+        print('Local', Xyz.x, self.y, Xyz.z)
+
+    @property
+    def get_xyz(self):
+        print('Global', x, y, z)
+        print('Local', Xyz.x, self.y, Xyz.z)
+
+    @classmethod
+    def info_class(cls):
+        print(cls.x, cls.y, cls.z)
+
+    @staticmethod
+    def info_static():
+        print(Xyz.x, Xyz.y, Xyz.z)
+
+    def increase_x(self):
+        self.x += 2
+
+    def increase_local_x(self):
+        Xyz.x += 2
+
+pr1 = Xyz()
+pr1.info()
+print()
+pr1.get_xyz
+print()
+pr1.info_class()
+print()
+pr1.info_static()
+print()
+pr1.increase_x()
+print(pr1.x)
+print()
+pr1.increase_local_x()
+print(pr1.x)
+
+#======================================================================================================================
 
 
 

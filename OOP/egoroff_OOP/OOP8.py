@@ -48,7 +48,7 @@ print()
 it1.info_with_prop
 print()
 it1.info_class()
-print()
+print(1)
 it1.info_static()
 print()
 it1.hiring_py_dev_self()
