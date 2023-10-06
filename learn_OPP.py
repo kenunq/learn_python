@@ -300,58 +300,354 @@
 
 #======================================================================================================================
 
-# Пространство имён класса
-
-x = 1
-y = 2
-z = 3
-
-class Xyz:
-    x = 10
-    y = 20
-    z = 30
-
-    def info(self):
-        # по дефолту имена переменных ищатся в глобальном пространстве
-        # если указать self либо название класса, то поиск будет идти внутри класса
-        print('Global', x, y, z)
-        print('Local', Xyz.x, self.y, Xyz.z)
-
-    @property
-    def get_xyz(self):
-        print('Global', x, y, z)
-        print('Local', Xyz.x, self.y, Xyz.z)
-
-    @classmethod
-    def info_class(cls):
-        print(cls.x, cls.y, cls.z)
-
-    @staticmethod
-    def info_static():
-        print(Xyz.x, Xyz.y, Xyz.z)
-
-    def increase_x(self):
-        self.x += 2
-
-    def increase_local_x(self):
-        Xyz.x += 2
-
-pr1 = Xyz()
-pr1.info()
-print()
-pr1.get_xyz
-print()
-pr1.info_class()
-print()
-pr1.info_static()
-print()
-pr1.increase_x()
-print(pr1.x)
-print()
-pr1.increase_local_x()
-print(pr1.x)
+# # Пространство имён класса
+#
+# x = 1
+# y = 2
+# z = 3
+#
+# class Xyz:
+#     x = 10
+#     y = 20
+#     z = 30
+#
+#     def info(self):
+#         # по дефолту имена переменных ищатся в глобальном пространстве
+#         # если указать self либо название класса, то поиск будет идти внутри класса
+#         print('Global', x, y, z)
+#         print('Local', Xyz.x, self.y, Xyz.z)
+#
+#     @property
+#     def get_xyz(self):
+#         print('Global', x, y, z)
+#         print('Local', Xyz.x, self.y, Xyz.z)
+#
+#     @classmethod
+#     def info_class(cls):
+#         print(cls.x, cls.y, cls.z)
+#
+#     @staticmethod
+#     def info_static():
+#         print(Xyz.x, Xyz.y, Xyz.z)
+#
+#     def increase_x(self):
+#         self.x += 2
+#
+#     def increase_local_x(self):
+#         Xyz.x += 2
+#
+# pr1 = Xyz()
+# pr1.info()
+# print()
+# pr1.get_xyz
+# print()
+# pr1.info_class()
+# print()
+# pr1.info_static()
+# print()
+# pr1.increase_x()
+# print(pr1.x)
+# print()
+# pr1.increase_local_x()
+# print(pr1.x)
 
 #======================================================================================================================
+
+
+# Магические методы __str__ и __repr__ служат для того что бы объекты были более наглядны
+# например без маг методов print(Экземпляр класса) выдаст: <__main__.Lion object at 0x0000018684AC5130>
+# с магическим методом print(Экземпляр класса) выдаст то что вы укажете в return
+
+# class Lion:
+#
+#     def __init__(self, name):
+#         self.name = name
+#
+#     def __repr__(self):
+#         return f'The object Lion - {self.name}'
+#
+#     def __str__(self):
+#         return f'Lion - {self.name}'
+#
+# q = Lion("Akar")
+# print(q)
+
+
+#======================================================================================================================
+
+# Магические методы
+
+# | Оператор | Метод оператора           |
+# | x + y    | __add__(self, other)      |
+# | x - y    | __sub__(self, other)      |
+# | x * y    | __mul__(self, other)      |
+# | x / y    | __truediv__(self, other)  |
+# | x // y   | __floordiv__(self, other) |
+# | x % y    | __mod__(self, other)      |
+
+# | Оператор | Метод оператора            |
+# | x += y   | __iadd__(self, other)      |
+# | x -= y   | __isub__(self, other)      |
+# | x *= y   | __imul__(self, other)      |
+# | x /= y   | __itruediv__(self, other)  |
+# | x //= y  | __ifloordiv__(self, other) |
+# | x %= y   | __imod__(self, other)      |
+
+# class BankAccount:
+#     def __init__(self, name, balance):
+#         self.name = name
+#         self.balance = balance
+#
+#     def __add__(self, other): # метод, когда экземпляр класса при мат. операции находится слева
+#         #число слева это self число справа это other
+#         print('вызов __add__')
+#         if isinstance(other, BankAccount):
+#             print('условие if isinstance(other, BankAccount): выполнено')
+#             return other.balance + self.balance
+#         if isinstance(other, (int, float)):
+#             print('условие if isinstance(other, (int, float)): выполнено')
+#             return self.balance + other
+#
+#     def __radd__(self, other):
+#         print('вызов __radd__')
+#         return self + other
+#
+#
+# ba1 = BankAccount('Bob', 200)
+# print(ba1.balance + 100)
+#
+# print(ba1 + 100) # Если не создаём маг. метод __add__ получаем ошибку TypeError
+#
+# # при вызове в таком порядке сначало вызывается __radd__ который меняет местами аргументы, затем вызывается __add__
+# print(100 + ba1) # Если не создаём маг. метод __radd__ получаем ошибку TypeError
+#
+# ba2 = BankAccount('Ivan', 400)
+# print(ba1+ba2)
+
+
+#======================================================================================================================
+
+# Магические методы __eq__, __hash__
+
+# class Point:
+#
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#
+#     def __eq__(self, other):
+#         return isinstance(other, Point) and self.x == other.x and self.y == other.y
+#
+#     def __hash__(self):
+#         return hash((self.x, self.y))
+#
+#
+# p1 = Point(1,2)
+# p2 = Point(1,2)
+# p3 = Point(3,4)
+#
+# # до переопределения метода __eq__ сравнение шло по id объектов и работал метод __hash__
+# # после переопределения метода __eq__ сравнение идёт по значениям объектов и не работает метод __hash__
+# print(id(p1), id(p2))
+# print(p1 == p2)
+#
+# # после переопределения метода __hash__ он заработает
+# print(hash(p1) == hash(p2), hash(p2) == hash(p3))
+
+
+
+#======================================================================================================================
+#
+# # Магический метод __bool__
+#
+# class Point:
+#
+#     def __init__(self, x, y) -> None:
+#         self.x = x
+#         self.y = y
+#
+#
+#     def __len__(self):
+#         print('call __len__')
+#         return abs(self.x - self.y)
+#
+#     def __bool__(self):
+#         print('call __bool__')
+#         return self.x != 0 or self.y != 0
+#
+#
+# p1 = Point(1,2)
+# print(len(p1))
+#
+# p2 = Point(0, 0)
+# print(bool(p1), bool(p2))
+
+
+#======================================================================================================================
+
+# Полиморфизм это возможность обработки разных объектов
+# путём использования метода с одним и тем же названием
+# в разных классах
+
+# class Rectangle:
+#
+#     def __init__(self, a, b):
+#         self.a = a
+#         self.b = b
+#
+#     def __str__(self):
+#         return f'Reactangle {self.a}x{self.b}='
+#
+#     def get_area(self):
+#         return self.a * self.b
+#
+# class Square:
+#
+#     def __init__(self, a):
+#         self.a = a
+#
+#     def __str__(self):
+#         return f'Square {self.a}**2='
+#
+#     def get_area(self):
+#         return self.a**2
+#
+# class Circle:
+#     def __init__(self, r):
+#         self.r = r
+#
+#     def __str__(self):
+#         return f'Circle 3.14 * {self.r} ** 2='
+#
+#     def get_area(self):
+#         return 3.14 * self.r ** 2
+#
+# rect1 = Rectangle(3,5)
+# rect2 = Rectangle(10,20)
+#
+# sq1 = Square(5)
+# sq2 = Square(10)
+#
+# cir1 = Circle(4)
+# cir2 = Circle(5)
+#
+# figures = [rect1,rect2,sq1,sq2,cir1,cir2]
+# for i in figures:
+#     print(i.get_area()) #используется одно и тоже название функции, но по факту используются разные функции
+
+
+#======================================================================================================================
+
+# Магические методы __getitem__, __setitem__, __delitem__
+
+# class Vector:
+#
+#     def __init__(self, *args):
+#         self.values = list(args)
+#
+#     def __repr__(self):
+#         return str(self.values)
+#
+#     def __getitem__(self, item):
+#         print('get index', item)
+#         if item < len(self.values):
+#             return self.values[item]
+#         else:
+#             print('Индекс вышел за границы листа')
+#
+#     def __setitem__(self, key, value):
+#         print('get index', key)
+#         if key < len(self.values):
+#             self.values[key] = value
+#         elif key > len(self.values):
+#             diff = key - (len(self.values)-1)
+#             self.values.extend(['-'] * diff)
+#             self.values[key] = value
+#         else:
+#             raise IndexError("Индекс вышел за границы листа")
+#
+#     def __delitem__(self, index):
+#         print('del index:', index)
+#         if index < len(self.values):
+#             del self.values[index]
+#         else:
+#             raise IndexError('Индекс вышел за границы коллекции')
+#
+# v1 = Vector(5,4,6,6,7,3)
+# print(v1[1])
+#
+# v1[10] = 10
+# print(v1)
+#
+# del v1[1]
+# print(v1)
+
+
+#======================================================================================================================
+
+# Наследование
+
+# parent
+class Human:
+
+    def can_walk(self):
+        print('Я умею ходить')
+
+    def can_breathe(self):
+        print('Я могу дышать')
+
+#класс доктор наследуется от класса человек и принимает все его методы
+
+class Doctor(Human):
+
+    def can_cure(self):
+        print("Я могу лечить")
+
+# класс ортопед наследуется от родительского класса доктор, а тот в свою очередь от класса человек
+#ортопед возьмет методы у обоих классов выше по иерархии
+class Ortoped(Doctor):
+
+    def can_cure_bones(self):
+        print('Я могу лечить травмы костей')
+
+#Класс архитектор наследуется от класса человек, и принимает все его методы
+class Architector(Human):
+
+    def can_build(self):
+        print('Я могу строить')
+
+
+doc1 = Doctor()
+# doc1.can_walk()
+# doc1.can_breathe()
+# doc1.can_cure()
+
+ort = Ortoped()
+# ort.can_walk()
+# ort.can_cure()
+# ort.can_breathe()
+# ort.can_cure_bones()
+
+arc = Architector()
+# arc.can_walk()
+# arc.can_breathe()
+# arc.can_build()
+
+# с помощью функции issubclass проверяем является ли Doctor под классом Human
+print(issubclass(Doctor, Human)) # -> True
+
+# с помощью функции isinstance проверяем является ли doc1 экземпляром класса Doctor
+print(isinstance(doc1, Doctor)) # -> True
+
+print(isinstance(doc1, Human)) # -> True
+
+#======================================================================================================================
+
+# Переопределение Overriding
+
+
+
+
 
 
 
