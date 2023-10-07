@@ -588,63 +588,228 @@
 # Наследование
 
 # parent
-class Human:
-
-    def can_walk(self):
-        print('Я умею ходить')
-
-    def can_breathe(self):
-        print('Я могу дышать')
-
-#класс доктор наследуется от класса человек и принимает все его методы
-
-class Doctor(Human):
-
-    def can_cure(self):
-        print("Я могу лечить")
-
-# класс ортопед наследуется от родительского класса доктор, а тот в свою очередь от класса человек
-#ортопед возьмет методы у обоих классов выше по иерархии
-class Ortoped(Doctor):
-
-    def can_cure_bones(self):
-        print('Я могу лечить травмы костей')
+# class Human:
+#
+#     def can_walk(self):
+#         print('Я умею ходить')
+#
+#     def can_breathe(self):
+#         print('Я могу дышать')
+#
+# #класс доктор наследуется от класса человек и принимает все его методы
+#
+# class Doctor(Human):
+#
+#     def can_cure(self):
+#         print("Я могу лечить")
+#
+# # класс ортопед наследуется от родительского класса доктор, а тот в свою очередь от класса человек
+# #ортопед возьмет методы у обоих классов выше по иерархии
+# class Ortoped(Doctor):
+#
+#     def can_cure_bones(self):
+#         print('Я могу лечить травмы костей')
 
 #Класс архитектор наследуется от класса человек, и принимает все его методы
-class Architector(Human):
-
-    def can_build(self):
-        print('Я могу строить')
-
-
-doc1 = Doctor()
-# doc1.can_walk()
-# doc1.can_breathe()
-# doc1.can_cure()
-
-ort = Ortoped()
-# ort.can_walk()
-# ort.can_cure()
-# ort.can_breathe()
-# ort.can_cure_bones()
-
-arc = Architector()
-# arc.can_walk()
-# arc.can_breathe()
-# arc.can_build()
-
-# с помощью функции issubclass проверяем является ли Doctor под классом Human
-print(issubclass(Doctor, Human)) # -> True
-
-# с помощью функции isinstance проверяем является ли doc1 экземпляром класса Doctor
-print(isinstance(doc1, Doctor)) # -> True
-
-print(isinstance(doc1, Human)) # -> True
+# class Architector(Human):
+#
+#     def can_build(self):
+#         print('Я могу строить')
+#
+#
+# doc1 = Doctor()
+# # doc1.can_walk()
+# # doc1.can_breathe()
+# # doc1.can_cure()
+#
+# ort = Ortoped()
+# # ort.can_walk()
+# # ort.can_cure()
+# # ort.can_breathe()
+# # ort.can_cure_bones()
+#
+# arc = Architector()
+# # arc.can_walk()
+# # arc.can_breathe()
+# # arc.can_build()
+#
+# # с помощью функции issubclass проверяем является ли Doctor под классом Human
+# print(issubclass(Doctor, Human)) # -> True
+#
+# # с помощью функции isinstance проверяем является ли doc1 экземпляром класса Doctor
+# print(isinstance(doc1, Doctor)) # -> True
+#
+# print(isinstance(doc1, Human)) # -> True
 
 #======================================================================================================================
 
 # Переопределение Overriding
 
+# class Human:
+#     my_name = 'Aleksey2'
+#
+#     def __init__(self, name):
+#         print('init Human')
+#         self.name = name
+#
+#     def can_walk(self):
+#         print('Я могу ходить')
+#
+#     def can_breathe(self):
+#         print('Я могу дышать')
+#
+#     def combo(self): # методы можно вызывать внутри другого метода
+#         self.can_walk()
+#         self.can_breathe()
+#
+# class Doctor(Human):
+#     name = 'Ivan2'
+#
+#     # переопределением называется создание в subclass метода с таким же названием как в родительском классе
+#     # после данной манипуляции класс Doctor при вызове метода будет использовать переопределенный метод
+#     def can_breathe(self):
+#         print('Доктор может дышать')
+#
+#     # переопределив маг. метод __str__ у класса Doctor, экземпляр doc стал возвращать название класса и своё имя
+#     def __str__(self):
+#         return f'Doctor {self.name}'
+#
+#
+# hum = Human('Adam')
+# doc = Doctor('Ivan')
+#
+# print()
+#
+# hum.can_breathe()
+# print(hum.name)
+# print(hum.my_name)
+# print(hum)
+#
+# print()
+#
+# doc.can_breathe()
+# print(doc.name)
+# print(doc.my_name)
+# print(doc)
+
+#======================================================================================================================
+
+# Наследование, Расширение класса
+
+# class Person:
+#
+#     def breathe(self):
+#         print('Человек дышит')
+#
+#     def sleep(self):
+#         print('Человек спит')
+#
+#     def combo(self):
+#         self.breathe()
+#         # проверить присутствует ли атрибут walk в данном классе Person
+#         if hasattr(self, 'walk'):
+#             self.walk()
+#         self.sleep()
+#         if hasattr(self, 'age'):
+#             print(self.age)
+#
+#
+# class Doctor(Person):
+#
+#     age = 28
+#
+#     def breathe(self):
+#         print('Доктор дышит')
+#
+#     def walk(self):
+#         print('Доктор ходит')
+#
+#     def sleep(self):
+#         print('Доктор спит')
+#
+# p = Person()
+# p.combo()
+# print('-' * 15)
+#
+# d = Doctor()
+# d.combo()
+
+
+#======================================================================================================================
+
+# Множественное наследование
+
+# class Doctor:
+#
+#     def can_cure(self):
+#         print('Я доктор, я умею лечить')
+#
+#     def can_build(self):
+#         print('Я доктор, я тоже умею строить')
+#
+# class Builder:
+#
+#     def can_build(self):
+#         print('Я строитель, я умею строить')
+#
+# # порядок родительских классов имеет значение
+# # при вызове can_build пайтон сначало пойдёт в Doctor
+# # и если найдёт там can_build то не пойдёт во второй класс Builder
+# class Person(Doctor, Builder):
+#     pass
+#
+#     # def can_build(self):
+#     #     print('Я человек, я тоже умею строить')
+#
+#
+# class Person2(Builder, Doctor):
+#     pass
+#
+#     # def can_build(self):
+#     #     print('Я человек, я тоже умею строить')
+#
+# print('Person порядок поиска:', Person.__mro__) # порядок поиска в родительских классах при вызове класса Person
+# print('Person2 порядок поиска:', Person2.__mro__)
+#
+# p = Person()
+# p.can_cure()
+# p.can_build()
+# print('-'*25)
+# p2 = Person2()
+# p2.can_cure()
+# p2.can_build()
+
+
+#======================================================================================================================
+
+import random
+
+class BingoCage:
+
+    def __init__(self, items):
+        self._items = items
+        random.shuffle(self._items)
+
+    def pick(self):
+        try:
+            return self._items.pop()
+        except IndexError:
+            raise LookupError('Pick from empty BingoCage')
+
+    # определение дандер метода __call__ в классе позволяет делать экземпляр класса вызываемым объектом
+    def __call__(self):
+        print('class BingoCage def __call__')
+        print(self._items)
+        return self.pick()
+
+
+bc = BingoCage([1,2,3,4,5,6,7,8,9,0])
+print(bc())
+print(bc())
+print(bc())
+
+
+#======================================================================================================================
 
 
 
