@@ -1,4 +1,4 @@
-class Range:
+  class Range:
     def __init__(self, start=0, stop=None, step=1):
         if not stop:
             self.start = 0

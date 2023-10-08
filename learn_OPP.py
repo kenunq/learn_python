@@ -782,38 +782,142 @@
 
 #======================================================================================================================
 
-import random
-
-class BingoCage:
-
-    def __init__(self, items):
-        self._items = items
-        random.shuffle(self._items)
-
-    def pick(self):
-        try:
-            return self._items.pop()
-        except IndexError:
-            raise LookupError('Pick from empty BingoCage')
-
-    # определение дандер метода __call__ в классе позволяет делать экземпляр класса вызываемым объектом
-    def __call__(self):
-        print('class BingoCage def __call__')
-        print(self._items)
-        return self.pick()
-
-
-bc = BingoCage([1,2,3,4,5,6,7,8,9,0])
-print(bc())
-print(bc())
-print(bc())
+# import random
+#
+# class BingoCage:
+#
+#     def __init__(self, items):
+#         self._items = items
+#         random.shuffle(self._items)
+#
+#     def pick(self):
+#         try:
+#             return self._items.pop()
+#         except IndexError:
+#             raise LookupError('Pick from empty BingoCage')
+#
+#     # определение дандер метода __call__ в классе позволяет делать экземпляр класса вызываемым объектом
+#     def __call__(self):
+#         print('class BingoCage def __call__')
+#         print(self._items)
+#         return self.pick()
+#
+#
+# bc = BingoCage([1,2,3,4,5,6,7,8,9,0])
+# print(bc())
+# print(bc())
+# print(bc())
 
 
 #======================================================================================================================
 
+# class Student:
+#     def __init__(self, name, marks):
+#         self.name = name
+#         self.marks = list(marks)
+#
+#     # определение дандер методов __getitem__, __setitem__, __delitem__
+#     # позволяет обращатся к экземпляру класса как к последовательности по индексу с помощью квадратных скобок
+#     def __getitem__(self, item):
+#         if 0 <= item < len(self.marks):
+#             return self.marks[item]
+#         raise IndexError('Неверный индекс')
+#
+#     def __setitem__(self, item, value):
+#         if not isinstance(value, int) or item < 0:
+#             raise TypeError("Индекс должен быть целым положительным числом")
+#         if item >= len(self.marks):
+#             offset = item + 1 - len(self.marks)
+#             self.marks += [None] * offset
+#         self.marks[item] = value
+#
+#     def __delitem__(self, item):
+#         if not isinstance(item, int):
+#             raise TypeError("Индекс должен быть целым положительным числом")
+#         del self.marks[item]
+#
+#
+# s1 = Student("ivan", [1,2,3,4,5,6,7,8,9])
+# print(s1[0])
+#
+# s1[0] = 0
+# print(s1[0])
+# del s1[0]
+# print(s1[0])
+
+
+#======================================================================================================================
+
+# class Point1:
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#
+# class Point2:
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#
+#     def __eq__(self, other):
+#         return self.x == other.x and self.y == other.y
+#
+#     # переопределение дандер метода __hash__ позволяет определять хэш на основе свойств экземпляра класса
+#     def __hash__(self):
+#         return hash((self.x, self.y))
+#
+#
+# p1 = Point1(1, 2)
+# p2 = Point1(1, 2)
+# print(p1 == p2, hash(p1) == hash(p2), hash(p1), hash(p2))
+#
+# p1 = Point2(1, 2)
+# p2 = Point2(1, 2)
+# print(p1 == p2, hash(p1) == hash(p2), hash(p1), hash(p2))
+
+
+#======================================================================================================================
+
+# class Range:
+#     def __init__(self, start=0, stop=None, step=1):
+#         if not stop:
+#             self.start = 0
+#             self.stop - stop
+#         else:
+#             self.start = start
+#             self.stop = stop
+#         if step == 0:
+#             raise ValueError(f'{self.__class__.__name__}() arg 3 must not be zero')
+#         self.step = step
+#
+#     def __iter__(self):
+#         self.value = self.start - self.step
+#         return self
+#
+#     def __next__(self):
+#         if self.value + self.step < self.stop:
+#             self.value += self.step
+#             return self.value
+#         raise StopIteration
+#
+#     def __repr__(self):
+#         return f'{self.__class__.__name__}({self.start}, {self.stop}{", " + str(self.step) if self.step > 1 else ""})'
+#
+#
+# print(Range(2,11,3))
+# print(list(Range(2,11,3)))
+#
+#
+# print(range(2, 11, 3))
+# print(list(range(2, 11, 3)))
+# r = Range(2, 11, 3)
+# r = iter(r)
+# print(next(r))
+# print(next(r))
+# print(next(r))
 
 
 
+#======================================================================================================================
 
 
 
