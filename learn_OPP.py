@@ -921,6 +921,169 @@
 
 
 
+# class Point1:
+#     def __init__(self, *args):
+#         self.__coords = args
+#     # дандер метод __len__ позволяет узнавать количество объектов экземпляра класса
+#     # без него при вызове функции len(<экземпляр_класса>) будет возбуждено исключение TypeError
+#     def __len__(self):
+#         return len(self.__coords)
+#
+#
+# class Point2:
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#
+#     def __len__(self):
+#         return self.x ** 2 + self.y ** 2
+#
+#     def __bool__(self):
+#         return self.x == self.y
+#
+#
+# p1 = Point1(1,2,3,4)
+# print(len(p1))
+#
+# p2 = Point2(10,10)
+# print(len(p2))
+# if p2:
+#     print('1')
+# else:
+#     print('2')
+#
+# p3 = Point2(12,13)
+# if p3:
+#     print(1)
+# else:
+#     print(2)
 
+
+#======================================================================================================================
+
+
+# class Test:
+#     my_attribute = 2 # атрибут класса является общим для всех его экземпляров
+#
+#     def __init__(self):
+#         my_property = 4 # свойство экземпляра является индивидуальным для каждого экземпляра
+#
+#     def meth(self):
+#         # для доступа к атрибутам класса внутри метода можно использовать как ссылку на класс так и на его экземпляр
+#         print('test.my_attribute ->', Test.my_attribute)
+#         print('self.my_attribute ->', self.my_attribute)
+#
+#     def set_bound(self):
+#         print('значение атрибута класса my_attribute:', getattr(Test, 'my_attribute'),
+#               '\nсловарь свойств экземпляра класса:', self.__dict__)
+#         # при присваивании значения атрибуту класса через экземпляр класса self,
+#         # оператор присваивания создаёт свойство с таким же именем для экземпляра класса
+#         self.my_attribute = 11
+#         # если использовать ссылку на класс то значение присвоится атрибуту класса
+#         # и никакого свойства экземпляра создано не будет
+#         # Test.my_attribute = 12
+#         print('значение атрибута класса my_attribute:', getattr(Test, 'my_attribute'),
+#               '\nсловарь свойств экземпляра класса:', self.__dict__)
+#
+#
+#
+#
+#
+# t1 = Test()
+# t1.meth()
+#
+# t1.set_bound()
+
+
+#======================================================================================================================
+
+# class Test:
+#     def __init__(self, value: int):
+#         self.value = value
+#
+#     @classmethod
+#     def __verify_data(cls, other):
+#         if not isinstance(other, (int, Test)):
+#             raise TypeError('Операнд справа должен иметь тип int или Test')
+#         return other if isinstance(other, int) else other.value
+#     def __eq__(self, other):
+#         """Обрабатывает оператор == и ( != если не переопределён дандер метод __ne__ )"""
+#         right_operand_value = self.__verify_data(other)
+#         # при вызове != интерпритатор подставит not к результату сравнения ( если не переопределён дандер метод __ne__ )
+#         return self.value == right_operand_value
+#
+#     def __lt__(self, other):
+#         """Обрабатывает оператор < и ( > если не переопределён дандер метод __gt__ )"""
+#         right_operand_value = self.__verify_data(other)
+#         # при вызове > интерпритатор подставит not к результату сравнения ( если не переопределён дандер метод __gt__ )
+#         return self.value < right_operand_value
+#
+#     def __le__(self, other):
+#         """Обрабатывает оператор <= и ( => если не переопределён дандер метод __ge__ )"""
+#         right_operand_value = self.__verify_data(other)
+#         # при вызове => интерпритатор подставит not к результату сравнения ( если не переопределён дандер метод __ge__ )
+#         return self.value <= right_operand_value
+#
+# t1 = Test(20)
+# t2 = Test(20)
+# # по умолчанию при сравнении экземпляров класса, сравниваются id объектов
+# # но если переопределить дандер метод __eq__ можно указать свою логику сравнения
+# print(t1 == t2)
+# print(t1 != t2)
+# print(t1 < t2)
+# print(t1 > t2)
+# print(t1 <= t2)
+# print(t1 >= t2)
+
+
+#======================================================================================================================
+
+# class DefenedVector:
+#     def __init__(self, value):
+#         self.__value = value
+#
+#     def __enter__(self):
+#         print('clas DefenedVector def __enter__')
+#         # при открытии менеджера контекста делаем поверхностную копию переданого объекта
+#         # и присваиваем её в свойство экземпляра класса __temporary,
+#         # возвращаем __temporary он попадёт в алиас as defened.
+#         # Тем самым мы защищаем изначальный объект т.к. будем работать внутри менеджера контекста с его копией.
+#         self.__temporary = self.__value[:]
+#         return self.__temporary
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         print('class DefenedVector def __exit__:', exc_type, exc_val)
+#         # при выходе из менеджера контекста проверяем, если небыло никаких исключений то
+#         # поэлементно копируем обратно в изначальный объект __value изменённый __temporary
+#         # за счёт оператора [:]
+#         if exc_type is None:
+#             self.__value[:] = self.__temporary
+#         return False
+#
+#
+# v1 = [1, 2, 3]
+# v2 = [2, 3]
+#
+# try:
+#     # за счёт кастомного менеджера контекста при возникновении исключения список v1 не был изменён частично
+#     with DefenedVector(v1) as defened:
+#         for i in range(len(defened)):
+#             defened[i] += v2[i]
+# except IndexError as exc:
+#     print(exc)
+#
+# print('v1:', v1)
+#
+# try:
+#     # при возникновении исключения список v1 был изменён частично
+#     for i in range(len(v1)):
+#         v1[i] += v2[i]
+# except IndexError as exc:
+#     print(exc)
+#
+# print('v1:', v1)
+
+
+#======================================================================================================================
 
 
