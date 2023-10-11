@@ -1087,3 +1087,211 @@
 #======================================================================================================================
 
 
+# Дата классы позволяют определять типизированные атрибуты в которые будут помещены данные
+# ниже приведён пример использования дата класса, функция возвращает дата класс
+# и появляется возможность обращаться к его атрибутам через точку, при этом IDE посвечивает тип объекта,
+# вместо возврата простого словаря и обращения по ключам в которых содержится неизвестный тип данных.
+
+# from dataclasses import dataclass
+# @dataclass
+# class A:
+#     x: int
+#     y: str
+#     z: dict
+#
+#
+# class B:
+#     x = 1
+#     y = 'qwe'
+#     z = {1: 'a'}
+#
+#     def with_dataclass(self) -> A:
+#         return A(
+#             x=self.x,
+#             y=self.y,
+#             z=self.z,
+#         )
+#
+#     def without_dataclass(self) -> dict:
+#         return dict(
+#             x=self.x,
+#             y=self.y,
+#             z=self.z,
+#         )
+#
+#
+# b1 = B()
+#
+# b = b1.with_dataclass()
+# print(b.x, b.y, b.z)
+#
+# b2 = b1.without_dataclass()
+# print(b2['x'], b2['y'], b2['z'])
+
+#======================================================================================================================
+
+
+# from pprint import pprint
+# from dataclasses import dataclass
+#
+# class Thing:
+#     def __init__(self, name, weight, price):
+#         self.name = name
+#         self.weight = weight
+#         self.price = price
+#
+#     def __repr__(self):
+#         print('repr')
+#         return f'{self.__class__.__name__}({self.__dict__})'
+#
+# @dataclass
+# class ThingData:
+#     name: str
+#     weight: int
+#     price: float
+#
+# t = Thing("Учебник по питону", 100, 2100.10)
+# print(t)
+#
+# # Так же в датаклассах уже реализованы дандер методы __init__, __repr__, __eq__ и т.д.
+# td1 = ThingData("Учебник по питону", 100, 2100.10)
+# # за счёт __repr__ дата классы отображают атрибуты объекта а не адрес в памяти
+# print(td1)
+#
+# td2 = ThingData("Учебник по питону", 100, 2100.10)
+# # за счёт __eq__ дата классы сравниваются по значениям атрибутов
+# print(f'{td1 == td2 = }')
+#
+# print('\n\n\n')
+# pprint(ThingData.__dict__)
+
+
+#======================================================================================================================
+
+# from dataclasses import dataclass, field, InitVar
+# # декоратор может принимать параметры:
+# # frozen=False(default)/True # делает атрибуты класса неизменяемыми (read only, только для чтения)
+# @dataclass
+# class ThingData2:
+#     # если необходимо наоборт исключить из __repr__ атрибут, тогда указываем repr=False в функции field
+#     # если необходимо исключить атрибут при сравнии с помощью __eq__, тогда указываем compare=False в функции field
+#     made_in: str = field(repr=False, compare=False)
+#
+#     # если необходимо указать дефолтное значение при использовании функции field, тогда указываем default=<значение>
+#     company: str = field(default='Tech Industries')
+#
+#     # по умолчанию изменяемые типы данных нельзя указывать в датаклассе
+#     # для этого необходимо использовать специальную функцию field (если необходимо получить пустой список)
+#     # либо указывать их в дандер методе __post_init__ (если необходимо получить заполненный список
+#     tech_params: list = field(default_factory=list)
+#
+#     # tech_params2 указан в атрибутах только для того чтобы __repr__ отображал этот атрибут при принте
+#     tech_params2: list = field(init=False) # не передавать атрибут tech_params2 в __init__ класса ThingData2
+#
+#     #атрибуты дата класса могут принимать значения по умолчанию
+#     name: str = 'Notebook'
+#     weight: int = 100
+#     price: float = 20000.90
+#
+#     #при анторирование с помощью InitVar , атрибут автоматически попадает в метод __post_init__
+#     in_store: InitVar[bool] = True
+#
+#     #срабатывает после обычного __init__
+#     def __post_init__(self, *args, **kwargs):
+#         print("def __post_init__", args, kwargs)
+#         self.tech_params2 = [1,2]
+#
+# td3 = ThingData2(made_in="China", name='Macbook', price=12000.90)
+# print(td3)
+#
+#
+# td4 = ThingData2(made_in='China', name='Lenovo', price=8999.99)
+# print(td4)
+
+#======================================================================================================================
+
+# class Point1:
+#     MAX_COORD = 100
+#     MIN_COORD = 0
+#
+# # динамическое создание класса с использованием метакласса
+# Point2 = type('Point2', (), {'X': 5, 'Y': 6})
+# print(Point1, Point2)
+# p2 = Point2()
+# print(p2.X)
+#
+# # динамическое создание класса который наследуется от классов Point и Point2
+# Point3 = type('Point3', (Point1, Point2), {})
+# print(Point3.MAX_COORD, Point3.X)
+#
+# # динамическое создание класса с методами
+# def method1(self):
+#     self.new_propety = 1
+#     return self.__dict__
+# Point4 = type("Point4", (Point1, Point2), {'method1': method1, 'method2': lambda self: self.MAX_COORD})
+# print(Point4().method1(), Point4().method2())
+
+#======================================================================================================================
+
+
+# # реализация мета класса в виде функции
+# def create_class_point(name: str, bases: tuple, attrs: dict):
+#     attrs.update({
+#         'MAX_COORD': 100,
+#         'MIN_COORD': 0
+#     })
+#     return type(name, bases, attrs)
+#
+# # реализация мета класса в виде класса
+# class CreateClassPoint(type):
+#
+#     def __new__(cls, name, base, attrs: dict):
+#         attrs.update({
+#             'MAX_COORD': 100,
+#             'MIN_COORD': 0
+#         })
+#         return type.__new__(cls, name, base, attrs)
+#
+#
+# class Point1(metaclass=create_class_point):
+#     def get_coords(self):
+#         return 0, 0
+#
+# class Point2(metaclass=CreateClassPoint):
+#     def get_coords(self):
+#         return 0,0
+#
+# p1 = Point1()
+# print(p1.MAX_COORD)
+# print(p1.get_coords())
+#
+# p2 = Point2()
+# print(p2.MAX_COORD)
+# print(p2.get_coords())
+
+#======================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
