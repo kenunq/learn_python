@@ -1271,6 +1271,191 @@
 
 #======================================================================================================================
 
+# Множественное наследование
+
+# class Goods:
+#     def __init__(self, name, weight, price):
+#         super().__init__() # Для того, чтобы отработал иницилизатор в классе MixinLog
+#
+#         print('class goods __init__', Goods.mro())
+#         self.name = name
+#         self.weight = weight
+#         self.price = price
+#
+#     def print_info(self):
+#         print(f'{self.name}, {self.weight}, {self.price}')
+#
+#
+# class Mixinlog:
+#
+#     def __init__(self):
+#         super().__init__() # Для того, чтобы отработал иницилизатор в классе MixinLog2
+#         print("class MixinLog def __init__", Mixinlog.mro())
+#         self.id = 152973
+#
+#     def save_sell_log(self):
+#         print(f'{self.id}, товар был продан 12:00')
+#
+# class Mixinlog2:
+#     def __init__(self):
+#         print('class MixinLog2 def __init__', Mixinlog2.mro())
+#         self.id = 923432
+#
+#     def save_sell_log2(self):
+#         print(f'{self.id}: товар был продан в 13:00 часов')
+#
+#
+# class NoteBook(Goods, Mixinlog, Mixinlog2):
+#     pass
+#
+# n1 = NoteBook('qwe', 100, 1000)
+# n1.print_info()
+# n1.save_sell_log()
+# n1.save_sell_log2()
+
+# т.к. класс Goods указан первым в списке наследования MRO,
+# все переданные аргументы при создании экземпляра класса NoteBook
+# попадут в метод __init__ класса Goods, и за счёт того что мы указали super().__init__()
+# сначала вызовется метод __init__ у класса MixinLog, который является следующим по списку в MRO
+# и т.к. в этом методе так же указан super().__init__() будет вызван метод __init__ у класса MixinLog2
+# и как будет выполнен __init__ в MixinLog2, интерпритатор вернётся к __init__ в MixinLog выполнит его,
+# и только потом вернётся к __init__ в Goods и так же выполнит его
+
+
+#======================================================================================================================
+
+# class Women:
+#     def __init__(self):
+#         print('class Women def __init__', self.Meta.ordering)
+#
+#     title = 'объект класса для поля title'
+#     photo = 'объект класса для поля photo'
+#     ordering = 'объект класса для поля ordering'
+#
+#     # за счёт вложенного класса можно определять отдельное пространство имён
+#     # в котором можно создавать атрибуты с таким же именем как и в классе обёртке
+#
+#     class Meta: #при создании экземпляра класса Women, экземпляр класса Meta НЕ создаётся.
+#         ordering = ['id']
+#
+# print(Women.ordering)
+# print(Women.Meta.ordering)
+#
+# w = Women()
+# print(w.ordering)
+# print(w.Meta.ordering)
+
+#======================================================================================================================
+
+class Point3DWithProperty:
+
+
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+
+    @classmethod
+    def verify_coord(cls, coord):
+        if type(coord) != int:
+            raise TypeError("Координата должна быть целым числом")
+
+
+    # Если необходимо реализовывать много геттеров/сеттеров/делитеров
+    # возможно стоит реализовать один класс дескриптор
+    # для замены огромного количества проперти которые будут загромождать код
+    @property
+    def x(self):
+        return self._x
+
+
+    @x.setter
+    def x(self, coord):
+        self.verify_coord(coord)
+        self._x = coord
+
+
+    @property
+    def y(self):
+        return self._y
+
+
+    @x.setter
+    def y(self, coord):
+        self.verify_coord(coord)
+        self._y = coord
+
+
+    @property
+    def z(self):
+        return self._z
+
+
+    @x.setter
+    def z(self, coord):
+        self.verify_coord(coord)
+        self._z = coord
+
+
+# Дескриптор данных, служит для получения/установки/удаления данных как замена property
+class IntDescriptor:
+    # self - Ссылка на экземпляр класса, то есть IntDescriptor()
+    # owner - Ссылка на класс Point3DWithDescriptor
+    # name - имя атрибута, то есть "x", "y", "z"
+    def __set_name__(self, owner, name):
+        """Вызывается при создании экземпляра класса IntDescriptor"""
+        self.name = '_' + name
+
+    # self - Ссылка на экземпляр класса, то есть IntDescriptor()
+    # instance - Ссылка на экземпляр класса Point3DWithDescriptor
+    # owner - Ссылка на класс Point3DWithDescriptor
+    def __get__(self, instance, owner):
+        """Вызывается в момент чтения значения"""
+        # return instance.__dict__[self.name]
+        return getattr(instance, self.name)
+
+    # self - Ссылка на экземпляр класса, то есть IntDescriptor()
+    # instance - Ссылка на экземпляр класса Point3DWithDescriptor
+    # value - Значение для присвоения
+    def __set__(self, instance, value):
+        """Вызывается в момент присваивания значения"""
+        self.verify_coord(value)
+        print(f'IntDescriptor __set__: {self.name} = {value}')
+        # instance.__dict__[self.name] = value
+        setattr(instance, self.name, value)
+
+    @classmethod
+    def verify_coord(cls, coord):
+        if type(coord) != int:
+            raise TypeError("Координата должна быть целым числом")
+
+
+class Point3DWithDescriptor:
+    # при создании экземпляров дескриптора в нём появляются атрибуты "_x", "_y", "_z"
+    x = IntDescriptor()
+    y = IntDescriptor()
+    z = IntDescriptor()
+
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+
+p1 = Point3DWithProperty(1, 2, 3)
+print('Point3DWithProperty __dict__:', p1.__dict__)  # {'_x': 1, '_y': 2, '_z': 3}
+
+p2 = Point3DWithDescriptor(1, 2, 3)
+print('Point3DWithDescriptor __dict__:', p2.__dict__)  # {'_x': 1, '_y': 2, '_z': 3}
+
+
+
+
+
+
+
+
 
 
 
